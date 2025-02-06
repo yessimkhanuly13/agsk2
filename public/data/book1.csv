@@ -1,0 +1,4 @@
+code,name,oldPrice,newPrice,difference,percentageChange,group,oldQuantity,newQuantity,month,book
+001,Цемент,5000,5100,100,2,Строительные материалы,100,110,1,book1
+002,Арматура,20000,20500,500,2.5,Металлоконструкции,50,55,1,book1
+001,Цемент,5100,5200,100,1.96,Строительные материалы,110,115,2,book1
