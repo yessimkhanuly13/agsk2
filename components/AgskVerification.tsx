@@ -302,34 +302,29 @@ export function AgskVerification() {
     })
   }
 
-  // Подгружаем CSV-файлы из /public/data при первом рендере
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Загружаем текст CSV для каждой книги
-        const [csv1, csv2, csv3, csv4] = await Promise.all([
-          fetch("/data/book1.csv").then((res) => res.text()),
-          fetch("/data/book2.csv").then((res) => res.text()),
-          fetch("/data/book3.csv").then((res) => res.text()),
-          fetch("/data/book4.csv").then((res) => res.text()),
-        ])
-
-        // Парсим CSV-файлы
-        const book1Data = parseCsv(csv1)
-        const book2Data = parseCsv(csv2)
-        const book3Data = parseCsv(csv3)
-        const book4Data = parseCsv(csv4)
-
+        // Отправляем один запрос для каждой книги с параметром "book"
+        const books = ["book1", "book2", "book3", "book4"];
+        const requests = books.map(book => 
+          fetch(`http://localhost:3000/api/books/january?book=${book}`).then(res => res.json())
+        );
+  
+        const responses = await Promise.all(requests);
+        console.log('Received data:', responses); // Проверяем данные в консоли
+  
         // Объединяем все данные в один массив
-        const allData = [...book1Data, ...book2Data, ...book3Data, ...book4Data]
-        setComparisonData(allData)
+        const allData = responses.flat(); 
+        setComparisonData(allData);
       } catch (error) {
-        console.error("Ошибка при загрузке CSV-файлов:", error)
+        console.error("Ошибка при загрузке данных:", error);
       }
-    }
-
-    fetchData()
-  }, [])
+    };
+  
+    fetchData();
+  }, []);
+  
 
   // Пересчитываем groupSummaries при изменении фильтров или данных
   useEffect(() => {
